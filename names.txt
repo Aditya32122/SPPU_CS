@@ -1,0 +1,2 @@
+aditya diwakar is learning basic commands 
+shift zz to save and quit vi  
