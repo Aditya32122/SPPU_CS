@@ -1,0 +1,73 @@
+import java.util.PriorityQueue;
+
+class Node implements Comparable<Node> {
+    int freq;
+    char symbol;
+    Node left, right;
+
+    // Constructor for leaf node
+    Node(int freq, char symbol) {
+        this.freq = freq;
+        this.symbol = symbol;
+        this.left = null;
+        this.right = null;
+    }
+
+    // Constructor for internal node
+    Node(int freq, Node left, Node right) {
+        this.freq = freq;
+        this.symbol = '-';
+        this.left = left;
+        this.right = right;
+    }
+
+    // Method to compare nodes based on frequency
+    @Override
+    public int compareTo(Node other) {
+        return this.freq - other.freq;
+    }
+}
+
+public class HuffmanCoding {
+    
+    // Recursive method to print the Huffman codes
+    private static void printCodes(Node node, String code) {
+        if (node.left == null && node.right == null && Character.isLetter(node.symbol)) {
+            System.out.println(node.symbol + " -> " + code);
+            return;
+        }
+
+        if (node.left != null) {
+            printCodes(node.left, code + "0");
+        }
+        if (node.right != null) {
+            printCodes(node.right, code + "1");
+        }
+    }
+
+    public static void main(String[] args) {
+        char[] chars = { 'a', 'b', 'c', 'd', 'e', 'f' };
+        int[] freqs = { 5, 9, 12, 13, 16, 45 };
+
+        // Priority queue to store the nodes
+        PriorityQueue<Node> nodes = new PriorityQueue<>();
+
+        // Create initial leaf nodes and add them to the priority queue
+        for (int i = 0; i < chars.length; i++) {
+            nodes.add(new Node(freqs[i], chars[i]));
+        }
+
+        // Construct Huffman tree
+        while (nodes.size() > 1) {
+            Node left = nodes.poll(); // Extract minimum frequency node
+            Node right = nodes.poll(); // Extract next minimum frequency node
+
+            // Create a new internal node with combined frequency
+            Node newNode = new Node(left.freq + right.freq, left, right);
+            nodes.add(newNode); // Add new node back to the priority queue
+        }
+
+        // Print Huffman codes from the root of the tree
+        printCodes(nodes.peek(), "");
+    }
+}
